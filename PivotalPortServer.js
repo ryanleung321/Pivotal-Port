@@ -1,4 +1,4 @@
-var host = process.env.CF_INSTANCE_IP || "0.0.0.0";
+//
 var port = process.env.PORT || 9000;
 
 var http = require('http');
