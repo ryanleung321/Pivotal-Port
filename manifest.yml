@@ -1,3 +1,0 @@
-applications: 
-- name: Pivotal Port
-  command: node PivotalPortServer.js
