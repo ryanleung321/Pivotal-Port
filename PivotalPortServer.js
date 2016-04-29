@@ -75,7 +75,6 @@ webSocketServer.on("connection", function (socket) {
                     function getInfoAndWorksheets(step) {
                         doc.getInfo(function(err, info) {
                             console.log('Loaded doc: '+info.title+' by '+info.author.email);
-                            socket.send('Porting to: ' + info.title)
 
                             //creates worksheet item
                             sheet = info.worksheets[worksheetNum-1];
@@ -86,11 +85,15 @@ webSocketServer.on("connection", function (socket) {
                                 socket.send(worksheetNum + " is not a valid worksheet number");
                                 return;
                             }
+
+                            socket.send('Porting to: ' + info.title + ' - ' + sheet.title);
+
                             //callback
                             step();
                         });
                     },
                     function deletingCells(step) {
+                        console.log("deleting cells")
                         sheet.getCells({
                             'min-row': 2,
                             'max-col': 6,
@@ -106,6 +109,7 @@ webSocketServer.on("connection", function (socket) {
                         });
                     },
                     function portStories(step) {
+                        console.log("porting stories")
                         socket.send("Porting stories")
                         sheet.getCells({
                             'min-row': 2,
@@ -119,6 +123,7 @@ webSocketServer.on("connection", function (socket) {
                         });
                     },
                     function portStoryIDs(step) {
+                        console.log("porting urls")
                         sheet.getCells({
                             'min-row': 2,
                             'min-col': 5,
