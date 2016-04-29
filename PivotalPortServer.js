@@ -1,21 +1,19 @@
-//
+//gets current port from environment
 var port = process.env.PORT || 9000;
 
+//import dependancies
 var http = require('http');
 var websocket = require("websocket.io");
 var express = require("express");
-var app = express();
-app.use(express.static(__dirname + "/"));
-var webServerApp = http.createServer(app).listen(port);  
-var webSocketServer = websocket.attach(webServerApp);
 var request = require('request');
 var GoogleSpreadsheet = require("google-spreadsheet");
 var async = require('async');
 
-http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello World\n');
-}).listen(port + 1);
+//set static http server listening at port and bind websocket to http 
+var app = express();
+app.use(express.static(__dirname + "/"));
+var webServerApp = http.createServer(app).listen(port);  
+var webSocketServer = websocket.attach(webServerApp);
 
 console.log("http server listening on %d", port)
 
@@ -26,36 +24,45 @@ webSocketServer.on("connection", function (socket) {
 
     socket.send("Ready to port from tracker");
 
+    //do when receiving a message
     socket.on("message", function (message) {
         socket.send("Preparing to port stories") 
+
+        //parse JSON string 
         obj = JSON.parse(message);
         var clearNum = parseInt(obj['clrLn']);
         var worksheetNum = parseInt(obj['shtNm']);
-        // var additionalOptions = obj['addOp'];
+
+        //extract spreadsheet key from url 
         var spreadsheetKey = getIdFromUrl(obj['shURL']);
+
         //removes non numerical characters from the url to obtain project ID
         var projectNum = obj['trURL'].replace(/\D/g, ''); 
+
         console.log("Spreadsheet key:" + spreadsheetKey);
         console.log("Spreadsheet num:" + projectNum);
-        // transferStories(projectNum, spreadsheetKey, worksheetNum);
+
+        //begin constructing https request to pivotal tracker
         var https = require('https');
         var sheet;
         var options = {
             uri: 'https://www.pivotaltracker.com/services/v5/projects/' + projectNum + '/stories?date_format=millis&with_state=finished',
-            // host: 'www.pivotaltracker.com',
-            // path: '/services/v5/projects/' + projectNum + '/stories?date_format=millis&with_state=finished',
             method: 'GET',
             json: true,
             headers: { "X-TrackerToken": '40eb129012034543a6c055a87cb38d59' }
         };
-    
+        
+        //make pivotal tracker api request
         request(options, function(error, response, body){
             if(error) {
                 console.log(error);
             } else {
                 //open the google spreadsheet by key
                 var doc = new GoogleSpreadsheet(spreadsheetKey);
+
+                //async series takes arguments array of functions to execute with arguments callback, and callback function to execute when all tasks complete
                 async.series([
+                    //oauth 
                     function setAuth(step) {
                         var creds_json = {
                             client_email: "tribalscale@pivotal-port.iam.gserviceaccount.com",
@@ -64,16 +71,22 @@ webSocketServer.on("connection", function (socket) {
                  
                         doc.useServiceAccountAuth(creds_json, step);
                     },
+                    //gets spreadsheet info
                     function getInfoAndWorksheets(step) {
                         doc.getInfo(function(err, info) {
                             console.log('Loaded doc: '+info.title+' by '+info.author.email);
                             socket.send('Porting to: ' + info.title)
+
+                            //creates worksheet item
                             sheet = info.worksheets[worksheetNum-1];
+
+                            //error checking for worksheet out of range
                             if (sheet === undefined){
                                 console.log(worksheetNum + " is not a valid sheet");
                                 socket.send(worksheetNum + " is not a valid worksheet number");
                                 return;
                             }
+                            //callback
                             step();
                         });
                     },
@@ -83,11 +96,13 @@ webSocketServer.on("connection", function (socket) {
                             'max-col': 6,
                             'return-empty': true
                         }, function(err, cells) {
-                        // bulk updates make it easy to update many cells at once
+                            //"deletes" all cells up to line clearNum in the first 6 columns
                             for (var i = 0; i < (clearNum-1)*6; i++){
                                 cells[i].value = "";
                             }
-                            sheet.bulkUpdateCells(cells, step); //async
+
+                            //update cells and call callback function
+                            sheet.bulkUpdateCells(cells, step); 
                         });
                     },
                     function portStories(step) {
@@ -97,12 +112,10 @@ webSocketServer.on("connection", function (socket) {
                             'max-col': 1,
                             'return-empty': true
                         }, function(err, cells) {
-                        // bulk updates make it easy to update many cells at once
                             for (var i = 0; i < body.length; i++){
-                                // console.log("story " + (i+1) + ": " + JSON.stringify(body[i].name));
                                 cells[i].value = body[i].name;
                             }
-                            sheet.bulkUpdateCells(cells, step); //async
+                            sheet.bulkUpdateCells(cells, step); 
                         });
                     },
                     function portStoryIDs(step) {
@@ -112,12 +125,10 @@ webSocketServer.on("connection", function (socket) {
                             'max-col': 5,
                             'return-empty': true
                         }, function(err, cells) {
-                        // bulk updates make it easy to update many cells at once
                             for (var i = 0; i < body.length; i++){
-                                // console.log("story " + (i+1) + ": " + JSON.stringify(body[i].name));
                                 cells[i].value = body[i].url;
                             }
-                            sheet.bulkUpdateCells(cells, step); //async
+                            sheet.bulkUpdateCells(cells, step); 
                         });
                     }
                 ], function(err){
