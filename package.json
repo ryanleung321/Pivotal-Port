@@ -14,13 +14,16 @@
     "websocket.io": "^0.2.1",
     "xml2js": "^0.4.16"
   },
+  "scripts": {
+    "start": "node PivotalPortServer.js"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryanleung321/autotab.git"
+    "url": "https://github.com/ryanleung321/Pivotal-Port.git"
   },
   "author": "",
   "license": "ISC",
