@@ -132,8 +132,8 @@ webSocketServer.on("connection", function (socket) {
                         });
                     }
                 ], function(err){
-                    console.log("process completed");
-                    socket.send("Process completed");
+                    console.log("transfer completed");
+                    socket.send("Transfer completed");
                 });
             }
         });
