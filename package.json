@@ -18,9 +18,6 @@
     "start": "node PivotalPortServer.js"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ryanleung321/Pivotal-Port.git"
