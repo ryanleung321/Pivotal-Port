@@ -77,6 +77,8 @@ webSocketServer.on("connection", function (socket) {
                             client_email: clientEmail,
                             private_key: privateKey
                         }
+
+                        console.log("Creds: " + creds_json)
                  
                         doc.useServiceAccountAuth(creds_json, step);
                     },
