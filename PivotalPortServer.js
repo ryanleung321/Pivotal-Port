@@ -59,7 +59,7 @@ webSocketServer.on("connection", function (socket) {
             headers: { "X-TrackerToken": trackerAuth }
         };
 
-        console.log(headers);
+        console.log(options);
         
         //make pivotal tracker api request
         request(options, function(error, response, body){
