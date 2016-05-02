@@ -56,7 +56,7 @@ webSocketServer.on("connection", function (socket) {
             uri: 'https://www.pivotaltracker.com/services/v5/projects/' + projectNum + '/stories?date_format=millis&with_state=finished',
             method: 'GET',
             json: true,
-            headers: { "X-TrackerToken": trackerAuth }
+            headers: { "X-TrackerToken": '40eb129012034543a6c055a87cb38d59' }
         };
 
         console.log(options);
@@ -77,8 +77,8 @@ webSocketServer.on("connection", function (socket) {
                     //oauth 
                     function setAuth(step) {
                         var creds_json = {
-                            client_email: clientEmail,
-                            private_key: privateKey
+                            client_email: "tribalscale@pivotal-port.iam.gserviceaccount.com",
+                            private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCd69PRqMwbObBh\ndE43v0SXStBT5OH6+pbJerwpZ9ftDtOQrfljrcDfHVLYZoyD4rU8Wl6AgUy0odiY\nE3aHa/3h9lEof7u75ZEB6hddwKFu5pFudecIdNzTAQwYZX0wDfjgdMO1gfL3dt7r\nyIfwjcL3C9XjJLqbB/HOSP0brgi9U6JFsYLgN3co7oQG+lW/+PK7xXGJGWKjOr2K\nf5NcwS/MIdx+u7MmWxYQ/WgC5Vcy29AeRyXnU/vuHIwTnU4u6FJZ42Dy7FS5RXQZ\n082B1oiaW76DI8Fh1jvYj1qNNamcGI8KPluGGn2S9lMkrw7Od+bCHp2wRtuILtNI\nPzCzh5JNAgMBAAECggEAVAqVrkTzYiXATQy1N4uteApTdeIftQ44wr5zdmGSEtFK\nG/vJ9ZcZRmN3nDxu2R0EMDszgZXN+W8MMlphQM5izSblp/TaNrOECQ3II5eJEdjY\nWn2aVvDCN/SduDoCdllpMiJRqL2gTLvRBI+ycH0w3YJJ8FiyiiCfOZW0RU/HzODl\nITnn7MmiVo/JuYGB77WwbJrxgqXELCcQchtPiL/QkuVJ08BKbzxwVLLzYr91yafx\nr991GdrDhbYC3QcChTR1Yi4FqhHn3LfH/sYLcL79F2qQdgvgUDeudZaeBxRSbXz7\nCWGIgtUlbnNYqbGQAJ2QJaID6b4E614C2rAl+TEnQQKBgQDudBIHwdTX//bVLfqM\nn+05Vbr8c6ReaVBxvreCkUr4eiyYwOhIhLAKlKzMJzl/0yfo1+cJsecFLX65HLBo\ndVEnRmLfIFnnbNG9o0YeYiQhxW5TuqczUgx/InWcLWSv2+4Mn6eaBo3YG7fIcv/X\nsiDRRv7M2JfLjtmj79MhxSEzcQKBgQCpirXO7/SDIliIg/3yh2s9XR61MfEhmhGL\n42sZSWwfASyU3SFji2J0Y5dnPUBdKR+2RhwxTyORUPwRBk+llBNUKUjMC3X0jLtR\nPUOKVFvbIeIi5bKVJsjYErtYfwYVrllDC/p4vZy/oPlrXcc/ugXh4PWZVq6yqBuh\nNtsb4GxmnQKBgDSWKmfFil/8Vf4bfrbGijVrv6nvAt/DT/dVvPixfBwiLXWejVt4\nz631rcn0GI0lDxcdjhkoP693ogvG1OykeroznphgdRNBf1vYBx2qPReph7Q1ZKw/\nuvvKqK9Bn4Pc97mW+ApSybNQIY62Nc/mu7ALfSPF3GwK29p4iFJZPAIxAoGAR7nl\nPM0Ldsb7CZY9w3NDDUzuBt5AE2Uo8zOdRa9oTJ2kjL4YuBJp7q+LiCPDrSYOwoBa\nwQmoFHxch59R5s0EeGCW6awXlQRM4wu2HTmfOs/U6cqfiLZF1hPmqoPiwR1nqhPR\nPW+Kdw/VNXURLIa4ol0Xym1/rxmrxsJ8ZAjIE4kCgYB6RDUsOTlvHZihcfBqdMhA\nn77+Pf7EkLuFqJT4tUzRkriiH2MdY+iKYDa8z2fyA2p6UikIvRd151DA9BWrOgNN\nLlxTnEkmLpPWc+4gtBblemakc7Incjgrpo54joyKUOujsRHmFYa8JyKzgFGw8JfO\n4pREE0r2zzG+Q8OLwjJgHg==\n-----END PRIVATE KEY-----\n"
                         }
 
                         console.log("Creds: " + creds_json['private_key'])
