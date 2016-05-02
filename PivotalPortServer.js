@@ -78,8 +78,9 @@ webSocketServer.on("connection", function (socket) {
                             private_key: privateKey
                         }
 
-                        console.log("Creds: " + creds_json)
-                 
+                        console.log("Creds: " + creds_json['private_key'])
+                        console.log("Creds: " + creds_json['client_email'])
+
                         doc.useServiceAccountAuth(creds_json, step);
                     },
                     //gets spreadsheet info
