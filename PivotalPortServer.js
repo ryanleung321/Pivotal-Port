@@ -42,6 +42,9 @@ webSocketServer.on("connection", function (socket) {
         var trackerAuth = obj['tauth'];
         var clientEmail = obj['email'];
         var privateKey = obj['prkey'];
+        console.log("trackerAuth: " + trackerAuth);
+        console.log("clientEmail: " + clientEmail);
+        console.log("privateKey: " + privateKey);
 
         console.log("Spreadsheet key:" + spreadsheetKey);
         console.log("Spreadsheet num:" + projectNum);
