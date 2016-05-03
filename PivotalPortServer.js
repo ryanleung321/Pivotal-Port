@@ -39,12 +39,10 @@ webSocketServer.on("connection", function (socket) {
         //removes non numerical characters from the url to obtain project ID
         var projectNum = obj['trURL'].replace(/\D/g, ''); 
 
-        var trackerAuth = "";
-        trackerAuth = obj['tauth'];
-        var clientEmail = ""
-        clientEmail = obj['email'];
-        var privateKey = "" 
-        privateKey = obj['prkey'];
+        //grabs authorization from message object
+        var trackerAuth = obj['tauth'];
+        var clientEmail = obj['email'];
+        var privateKey = obj['prkey'];
         console.log("trackerAuth: " + trackerAuth);
         console.log("clientEmail: " + clientEmail);
         console.log("privateKey: " + privateKey);
@@ -61,8 +59,6 @@ webSocketServer.on("connection", function (socket) {
             json: true,
             headers: { "X-TrackerToken": trackerAuth }
         };
-
-        console.log(options);
         
         //make pivotal tracker api request
         request(options, function(error, response, body){
@@ -77,7 +73,7 @@ webSocketServer.on("connection", function (socket) {
                     //oauth 
                     function setAuth(step) {
                         var creds_json = {
-                            client_email: clientEmail,
+                            client_email:clientEmail,
                             private_key: privateKey
                         }
 
@@ -169,6 +165,10 @@ webSocketServer.on("connection", function (socket) {
 //parses the URL for the google spreadsheet key
 function getIdFromUrl(url) {
     return url.match(/[-\w]{25,}/);
+}
+
+function jsonEscape(str)  {
+    return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
 }
 
 
