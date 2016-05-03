@@ -43,12 +43,13 @@ webSocketServer.on("connection", function (socket) {
         var trackerAuth = obj['tauth'];
         var clientEmail = obj['email'];
         var privateKey = obj['prkey'];
-        console.log("trackerAuth: " + trackerAuth);
-        console.log("clientEmail: " + clientEmail);
-        console.log("privateKey: " + privateKey);
 
-        console.log("Spreadsheet key:" + spreadsheetKey);
-        console.log("Spreadsheet num:" + projectNum);
+        //stringify privatekey to be formatted
+        var newPrivateKey = JSON.stringify(privateKey);
+
+        //replace \n with \\n
+        privateKey = jsonEscape(newPrivateKey);
+        newPrivateKey = JSON.parse(privateKey);
 
         //begin constructing https request to pivotal tracker
         var https = require('https');
@@ -74,11 +75,9 @@ webSocketServer.on("connection", function (socket) {
                     function setAuth(step) {
                         var creds_json = {
                             client_email:clientEmail,
-                            private_key: privateKey
+                            //leftover '\' that is replaced
+                            private_key: newPrivateKey.replace(/\\/g, "")
                         }
-
-                        console.log("Creds: " + creds_json['private_key'])
-                        console.log("Creds: " + creds_json['client_email'])
 
                         doc.useServiceAccountAuth(creds_json, step);
                     },
@@ -167,14 +166,10 @@ function getIdFromUrl(url) {
     return url.match(/[-\w]{25,}/);
 }
 
+//reformats \n in google auth key to properly display line breaks
 function jsonEscape(str)  {
-    return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+    return str.replace(/\\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
 }
-
-
-
-
-
 
 
 
