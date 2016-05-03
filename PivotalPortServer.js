@@ -69,9 +69,6 @@ webSocketServer.on("connection", function (socket) {
             if(error) {
                 console.log(error);
             } else {
-
-                console.log(body);
-
                 //open the google spreadsheet by key
                 var doc = new GoogleSpreadsheet(spreadsheetKey);
 
